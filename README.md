@@ -7,7 +7,7 @@ This game is being developed using my custom engine called [scarablib](https://g
 
 # Building
 ## Requirements
-> ![NOTE]
+> [!NOTE]
 > These are only required for the header files. You can move the header files folder from each library into the `include/external` directory and it should compile without having to install the libraries
 
 - [scarablib](https://github.com/vaaako/scarablib) *(header files only)*
