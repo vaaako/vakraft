@@ -1,0 +1,9 @@
+# Avoid repeating files in my github
+include/external/scarablib
+# Build folder
+build/
+.cache/
+# Scripts
+*.sh
+# Session
+*.vim
