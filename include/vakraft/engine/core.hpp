@@ -10,10 +10,10 @@
 
 class Core {
 	public:
-		Core(const Window& window) noexcept;
+		Core(Window& window) noexcept;
 		~Core() noexcept;
 
-		void update(Window& window) noexcept;
+		void update() noexcept;
 		void draw() const noexcept;
 
 		inline Camera& get_camera() noexcept {
@@ -21,7 +21,8 @@ class Core {
 		}
 
 	private:
-		Raycast* ray = nullptr; // Just a pointer to initialize after world
+		Window& window;
+		Raycast* ray = nullptr; // Just a pointer so i can initialize after world
 		World* world = nullptr;
 		Camera camera;
 		bool mouse_captured = false;
@@ -66,7 +67,7 @@ class Core {
 		);
 
 		void hit_callback(MouseHandler& mouse, const vec3<int32>& block, const vec3<int32>& prev_block) const noexcept;
-		void update_keyboard(Window& window, KeyboardHandler& keyboard, const float dt) noexcept;
-		void update_mouse(const Window& window, MouseHandler& mouse, const float dt) noexcept;
+		void update_keyboard(KeyboardHandler& keyboard, const float dt) noexcept;
+		void update_mouse(MouseHandler& mouse, const float dt) noexcept;
 
 };

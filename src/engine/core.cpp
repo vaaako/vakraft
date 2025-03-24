@@ -2,8 +2,8 @@
 #include "scarablib/proper/log.hpp"
 #include "vakraft/engine/raycast.hpp"
 
-Core::Core(const Window& window) noexcept
-	: world(new World()), camera(Camera(window)) {
+Core::Core(Window& window) noexcept
+	: window(window), world(new World()), camera(Camera(window)) {
 
 	// OpenGL
 	glEnable(GL_CULL_FACE);
@@ -31,14 +31,14 @@ Core::~Core() noexcept {
 	delete this->world;
 }
 
-void Core::update(Window& window) noexcept {
-	const float dt = window.dt();
+void Core::update() noexcept {
+	const float dt = this->window.dt();
 
-	this->update_keyboard(window, window.keyboard(), dt);
-	this->update_mouse(window, window.mouse(), dt);
+	this->update_keyboard(this->window.keyboard(), dt);
+	this->update_mouse(this->window.mouse(), dt);
 }
 
-void Core::update_keyboard(Window& window, KeyboardHandler& keyboard, const float dt) noexcept {
+void Core::update_keyboard(KeyboardHandler& keyboard, const float dt) noexcept {
 	vec3<float> direction = vec3<float>(0.0f);
 
 	if(keyboard.isdown(Keycode::W)) {
@@ -93,21 +93,20 @@ void Core::hit_callback(MouseHandler& mouse, const vec3<int32>& voxel, const vec
 	}
 }
 
-void Core::update_mouse(const Window& window, MouseHandler& mouse, const float dt) noexcept {
+void Core::update_mouse(MouseHandler& mouse, const float dt) noexcept {
 	// Only rotate when click on screen
 	if(!this->mouse_captured && mouse.isclick(MouseHandler::Button::LMB)) {
 		LOG_INFO("Clicked");
 		this->mouse_captured = true;
-		window.grab_cursor(true);
+		this->window.grab_cursor(true);
 	}
 
 	// Rotate camera
 	if(this->mouse_captured) {
 		camera.rotate(mouse);
-		// mouse.set_cursor_position(window, (uint32)window.get_half_width(), (uint32)window.get_half_height());
 	}
 
-	if(window.has_event(MOUSEBUTTONDOWN)) {
+	if(this->window.has_event(MOUSEBUTTONDOWN)) {
 		ray->check(camera.get_position(), camera.get_forward(),
 			[&](const vec3<int32>& voxel, const vec3<int32>& next_voxel) {
 				this->hit_callback(mouse, voxel, next_voxel);
@@ -120,6 +119,5 @@ void Core::draw() const noexcept {
 	this->shader.use();
 	this->shader.set_matrix4f("mvp", camera.get_proj_matrix() * camera.get_view_matrix());
 
-	// glUniform1i(glGetUniformLocation(shader.get_id(), "texSampler"), 0);
 	this->world->draw();
 }

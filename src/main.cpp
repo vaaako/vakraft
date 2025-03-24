@@ -27,12 +27,16 @@ int main() {
 	});
 	window.set_clear_color(Colors::MAGENTA);
 
+	// i will fix this later (maybe)
 	Camera2D camera2d = Camera2D(window);
 	Font font = Font(camera2d, "resources/fonts/dos.ttf", 20);
 
+	// Game entry point
 	Core core = Core(window);
 	Camera& camera = core.get_camera();
 
+
+	// NOTE: This is for debug only
 	uint32 timer = window.timenow();
 
 	Scene2D scene2d = Scene2D(camera2d);
@@ -54,13 +58,17 @@ int main() {
 			core.get_camera().update_viewport(window);
 			camera2d.update_viewport(window);
 
+			// Aim depends of window size
 			aim->set_position({ window.get_half_width() - 5.0f, window.get_half_height() - 5.0f });
 		});
 
-		core.update(window);
+
+		// Draw and update game
+		core.update();
 		core.draw();
 
-		// WARNING: i need to improve font object and logic 
+
+		// WARNING: i need to improve font object and logic (in the engine)
 		glDisable(GL_CULL_FACE);
 		vec3<int32> pos = camera.get_position();
 		font.draw_text(std::format("X: {}, Y: {}, Z: {}", pos.x, pos.y, pos.z), { 0.0f, 10.0f });
